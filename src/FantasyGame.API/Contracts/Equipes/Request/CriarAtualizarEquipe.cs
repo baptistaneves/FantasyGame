@@ -8,6 +8,7 @@ namespace FantasyGame.API.Contracts.Equipes.Request
         [MinLength(3, ErrorMessage = "O nome deve ter no minimo 3 caracteres")]
         public string Nome { get; set; }
 
+        [Required(ErrorMessage = "Digite alguma descrição da equipe")]
         public string Descricao { get; set; }
     }
 }

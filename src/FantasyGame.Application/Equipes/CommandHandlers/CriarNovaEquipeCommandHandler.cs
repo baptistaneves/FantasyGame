@@ -36,7 +36,7 @@ namespace FantasyGame.Application.Equipes.CommandHandlers
         {
             if (_equipeRepository.Buscar(e => e.Nome == nome).Result.Any())
             {
-                _notificador.publicarNotificacoes(new Notificacao(EquipeMessageErrors.EquipeJaExiste));
+                _notificador.publicarNotificacao(new Notificacao(EquipeMessageErrors.EquipeJaExiste));
                 return true;
             }
 
@@ -47,7 +47,7 @@ namespace FantasyGame.Application.Equipes.CommandHandlers
         {
             if (command.EhValido()) return true;
 
-            command.ValidationResult.Errors.ForEach(error => _notificador.publicarNotificacoes(new Notificacao(error.ErrorMessage)));
+            command.ValidationResult.Errors.ForEach(error => _notificador.publicarNotificacao(new Notificacao(error.ErrorMessage)));
 
             return false;
         }

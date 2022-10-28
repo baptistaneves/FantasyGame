@@ -1,6 +1,8 @@
 ﻿using FantasyGame.Application.Campeonatos.Commands;
 using FantasyGame.Application.Campeonatos.Models;
+using FantasyGame.Domain.Interfaces.Notifications;
 using FantasyGame.Domain.Interfaces.Repository;
+using FantasyGame.Domain.Notifications;
 using MediatR;
 
 namespace FantasyGame.Application.Campeonatos.CommandHandlers
@@ -8,19 +10,27 @@ namespace FantasyGame.Application.Campeonatos.CommandHandlers
     public class GerarCampeonatoQueryHandler : IRequestHandler<GerarCampeonatoQuery, Campeonato>
     {
         private readonly IEquipeRepository _equipeRepository;
+        private readonly INotificador _notificador;
         private readonly Campeonato _campeonato;
         private List<Pontuacao> _pontuacoes;
-        public GerarCampeonatoQueryHandler(IEquipeRepository equipeRepository)
+        public GerarCampeonatoQueryHandler(IEquipeRepository equipeRepository, INotificador notificador)
         {
             _equipeRepository = equipeRepository;
             _campeonato = new Campeonato();
             _pontuacoes = new List<Pontuacao>();
+            _notificador = notificador;
         }
 
         public async Task<Campeonato> Handle(GerarCampeonatoQuery command, CancellationToken cancellationToken)
         {
             var random = new Random();
             var equipes = await _equipeRepository.ObterEquipesAleatorias();
+
+            if(equipes.Count < 4)
+            {
+                _notificador.publicarNotificacao(new Notificacao("Devem cadastradas pelo menos 4 equipes"));
+                return null;
+            }
 
             for (var i = 0; i < equipes.Count; i++)
             {
@@ -30,8 +40,8 @@ namespace FantasyGame.Application.Campeonatos.CommandHandlers
                     {
                         if (!_campeonato.Partidas.Any(p=> p.Equipes.Contains(equipes[i].Nome) && p.Equipes.Contains(equipes[j].Nome))) 
                         {
-                            var pontuacaoParaPrimeiraEquipe = random.Next(0, 9);
-                            var pontuacaoParaSegundaEquipe = random.Next(0, 9);
+                            var pontuacaoParaPrimeiraEquipe = random.Next(0, 5);
+                            var pontuacaoParaSegundaEquipe = random.Next(6, 10);
 
                             _campeonato.Partidas.Add(new Partida
                             {
@@ -110,39 +120,39 @@ namespace FantasyGame.Application.Campeonatos.CommandHandlers
 
         private void OrdenarTabelaClassificativa()
         {
-            int first = 0, second = 0, third = 0;
+            int primeiro = 0, segundo = 0, terceiro = 0;
 
             for (var i = 0; i < _pontuacoes.Count; i++)
             {
-                if (_pontuacoes[i].Pontos > first)
+                if (_pontuacoes[i].Pontos > primeiro)
                 {
-                    third = second;
-                    second = first;
-                    first = _pontuacoes[i].Pontos;
+                    terceiro = segundo;
+                    segundo = primeiro;
+                    primeiro = _pontuacoes[i].Pontos;
                 }
-                else if (_pontuacoes[i].Pontos > second && _pontuacoes[i].Pontos != first)
+                else if (_pontuacoes[i].Pontos > segundo && _pontuacoes[i].Pontos != primeiro)
                 {
-                    third = second;
-                    second = _pontuacoes[i].Pontos;
+                    terceiro = segundo;
+                    segundo = _pontuacoes[i].Pontos;
                 }
-                else if (_pontuacoes[i].Pontos > third && _pontuacoes[i].Pontos != second)
-                    third = _pontuacoes[i].Pontos;
+                else if (_pontuacoes[i].Pontos > terceiro && _pontuacoes[i].Pontos != segundo)
+                    terceiro = _pontuacoes[i].Pontos;
             }
 
 
             for (int i = 0; i < _pontuacoes.Count; i++)
             {
-                if(first == _pontuacoes[i].Pontos)
+                if(primeiro == _pontuacoes[i].Pontos)
                 {
                     _campeonato.Campeao = _pontuacoes[i].Equipe;
                 }
 
-                if (second == _pontuacoes[i].Pontos)
+                if (segundo == _pontuacoes[i].Pontos)
                 {
                     _campeonato.Vice = _pontuacoes[i].Equipe;
                 }
 
-                if (third == _pontuacoes[i].Pontos)
+                if (terceiro == _pontuacoes[i].Pontos)
                 {
                     _campeonato.Terceiro = _pontuacoes[i].Equipe;
                 }

@@ -4,8 +4,18 @@ namespace FantasyGame.API.Registrar
 {
     public class MvcWebAppRegistrar : IWebApplicationRegistrar
     {
+        
         public void RegisterServices(WebApplication app)
         {
+            app.ConfigureExceptionHandler(app.Environment);
+
+            app.UseHttpsRedirection();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.MapControllers();
+
             app.UseSwagger();
             app.UseSwaggerUI(options =>
             {
@@ -17,12 +27,6 @@ namespace FantasyGame.API.Registrar
                         description.ApiVersion.ToString());
                 }
             });
-
-            app.UseHttpsRedirection();
-
-            app.UseAuthorization();
-
-            app.MapControllers();
         }
     }
 }

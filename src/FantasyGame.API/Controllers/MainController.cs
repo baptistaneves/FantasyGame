@@ -21,7 +21,7 @@ namespace FantasyGame.API.Controllers
 
         protected void NotificarErro(string mensagem)
         {
-            _notificador.publicarNotificacoes(new Notificacao(mensagem));
+            _notificador.publicarNotificacao(new Notificacao(mensagem));
         }
 
         protected ActionResult CustomResponse(object result = null)

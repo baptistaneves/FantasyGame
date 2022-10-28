@@ -15,7 +15,7 @@ namespace FantasyGame.Domain.Notifications
             return _notificacoes.ToList();
         }
 
-        public void publicarNotificacoes(Notificacao notification)
+        public void publicarNotificacao(Notificacao notification)
         {
             _notificacoes.Add(notification);
         }

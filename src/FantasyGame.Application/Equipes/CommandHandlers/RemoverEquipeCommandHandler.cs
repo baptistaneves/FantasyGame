@@ -23,7 +23,7 @@ namespace FantasyGame.Application.Equipes.CommandHandlers
 
             if (equipe == null)
             {
-                _notificador.publicarNotificacoes(new Notificacao(EquipeMessageErrors.EquipeNaoEncontrada));
+                _notificador.publicarNotificacao(new Notificacao(EquipeMessageErrors.EquipeNaoEncontrada));
                 return null;
             }
 

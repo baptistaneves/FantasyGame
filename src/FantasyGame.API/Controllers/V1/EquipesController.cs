@@ -19,7 +19,7 @@ namespace FantasyGame.API.Controllers.V1
         {
             _mediator = mediator;
         }
-
+        
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Equipe>>> ObterTodasEquipes([FromQuery] PaginationParams @params)
         {

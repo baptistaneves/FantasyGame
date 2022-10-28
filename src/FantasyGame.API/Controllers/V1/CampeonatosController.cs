@@ -16,13 +16,11 @@ namespace FantasyGame.API.Controllers.V1
             _mediator = mediator;
         }
 
-
         [HttpGet]
-        public async Task<ActionResult<List<Pontuacao>>> ObterCampeonato()
+        public async Task<ActionResult<Campeonato>> ObterCampeonato()
         {
             var query = new GerarCampeonatoQuery();
             var result = await _mediator.Send(query);
-
 
             return CustomResponse(result);
         }

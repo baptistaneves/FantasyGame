@@ -6,6 +6,6 @@ namespace FantasyGame.Domain.Interfaces.Notifications
     {
         bool TemNotificacoes();
         List<Notificacao> ObterNotificacoes();
-        void publicarNotificacoes(Notificacao notification);
+        void publicarNotificacao(Notificacao notification);
     }
 }
